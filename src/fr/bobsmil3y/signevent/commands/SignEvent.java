@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class Event implements CommandExecutor {
+public class SignEvent implements CommandExecutor {
 
 	private static boolean event = false;
 	

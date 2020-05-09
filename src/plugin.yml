@@ -4,10 +4,20 @@ main: fr.bobsmil3y.signevent.Main
 author: BoBsmil3Y
 description: Simple plugin to make hide sign event.
 api-version: 1.15
+
 commands:
-  event:
-    description: Active the event mode.
-    permission: signevent.admin
+  signevent:
+    description: Show plugin help and version.
+    permission: signevent.admin.help
+  signevent on:
+    description: Enable the event mode.
+    permission: signevent.admin.active
+  signevent off:
+    description: Disable the event mode.
+    permission: signevent.admin.active
+  signevent reload:
+    description: Refresh the config file.
+    permission: signevent.admin.reload
 permissions:
   signevent.admin:
     description: Allows you to do /event command.
