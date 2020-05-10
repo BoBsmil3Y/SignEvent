@@ -1,9 +1,8 @@
 package fr.bobsmil3y.signevent;
 
-import java.util.ArrayList;
-
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+
 
 public class EventSigns {
 
@@ -19,7 +18,7 @@ public class EventSigns {
 	public EventSigns(Block sign, Double price) {
 		this.setSign(sign);
 		this.setPrice(price);
-		this.code = total;
+		this.setCode(total);
 		this.total++;
 	}
 	
@@ -27,12 +26,33 @@ public class EventSigns {
 	public EventSigns(Block sign, ItemStack reward, int amount) {
 		this.setSign(sign);
 		this.setReward(reward);
-		this.amount = amount;
-		this.code = total;
+		this.setAmount(amount);
+		this.setCode(total);
 		this.total++;
 	}
 	
 	
+	
+	public int getCode() {
+		return code;
+	}
+
+
+	public void setCode(int code) {
+		this.code = code;
+	}
+
+
+	public int getAmount() {
+		return amount;
+	}
+
+
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+
+
 	public Block getSign() {
 		return sign;
 	}

@@ -1,0 +1,21 @@
+options:  
+  # The first line of the sign will be remplaced by this one. 
+  firstLine: "&7! &cEvent &7!"
+  secondLine: "&fYou find me !"
+  thirdLine: "&fGood job !"
+  fourthLine: "&8~"
+  
+  # Do you want to show the reward rather than a line above ?
+  # Put -1 to disabled this
+  # Put 1 to 4 to show the reward on the sign at this line.
+  putRewardOnSign: 4
+  
+  # Money symbol.
+  symbol: "€"
+  
+  # Money and symbol order. You can make a space between them.
+  # {amount} {symbol} will display 1000 €.
+  symbolOrder: "{amount} {symbol}"
+
+messages:
+  

@@ -15,6 +15,8 @@ public class Main extends JavaPlugin {
 		
 		getServer().getPluginManager().registerEvents(new CreateSign(this), this);
 		
+		saveDefaultConfig();
+
 	}
 
 }
