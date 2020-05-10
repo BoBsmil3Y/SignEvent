@@ -25,6 +25,10 @@ public class SignEvent implements CommandExecutor {
 	}
 	
 	
+	public static void setEvent(boolean state) {
+		event = state;
+	}
+	
 	public static boolean getEvent() {
 		return event;
 	}

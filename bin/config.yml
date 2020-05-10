@@ -1,4 +1,8 @@
 options:  
+  # Replace lines of the sign for those below ?
+  # Default: true
+  replaceLines: true
+  
   # The first line of the sign will be remplaced by this one. 
   firstLine: "&7! &cEvent &7!"
   secondLine: "&fYou find me !"
@@ -6,16 +10,24 @@ options:
   fourthLine: "&8~"
   
   # Do you want to show the reward rather than a line above ?
-  # Put -1 to disabled this
+  # Put -1 to disabled this.
   # Put 1 to 4 to show the reward on the sign at this line.
+  # Default: 4
   putRewardOnSign: 4
   
-  # Money symbol.
+  # Change the symbol in messages (only affect chat message, not your economy plugin).
+  # Default: "€"
   symbol: "€"
   
-  # Money and symbol order. You can make a space between them.
+  # Change the order of amount and symbol display. You can make a space between them.
   # {amount} {symbol} will display 1000 €.
+  # Default: "{amount} {symbol}"
   symbolOrder: "{amount} {symbol}"
 
+  # An option to disabled message when you creating sign with [event] on first line but not want to use this plugin.
+  # Can be great if you have an other plugin use this way to create special sign.
+  # Default: false
+  disabledWarning: false
+  
 messages:
   

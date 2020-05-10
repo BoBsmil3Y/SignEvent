@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,12 +15,12 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.bobsmil3y.signevent.Main;
 import fr.bobsmil3y.signevent.commands.SignEvent;
-import fr.bobsmil3y.signevent.EventSigns;
+import fr.bobsmil3y.signevent.EventSign;
 
 public class CreateSign implements Listener {
 
 	private Main main;
-	private ArrayList<EventSigns> signs = new ArrayList<EventSigns>();
+	private ArrayList<EventSign> signs = new ArrayList<EventSign>();
 	
 	public CreateSign(Main main) {
 		this.main = main;
@@ -40,10 +41,12 @@ public class CreateSign implements Listener {
 			return;
 		}
 
+		FileConfiguration config = main.getConfig();
+		
 		if(event.getLine(0).equalsIgnoreCase("[event]")) {
 			
-			//If block reward
-			if(event.getLine(1).equalsIgnoreCase("block")) {	
+			// For item reward
+			if(event.getLine(1).equalsIgnoreCase("item")) {	
 				
 				if(event.getLine(3) != "" && event.getLine(3) != null) {
 										
@@ -64,11 +67,11 @@ public class CreateSign implements Listener {
 						
 						ItemStack item = new ItemStack(material, amount);
 						
-						EventSigns signevent = new EventSigns(sign, item, amount);
+						EventSign signevent = new EventSign(sign, item, amount);
 						signs.add(signevent);
 						player.sendMessage("§aSE §7| §7Your sign as been §aadded§7 to the list !");
 						
-						editSign(event);
+						editSignLines(event, config, signevent, "block");
 						
 					} else {
 						player.sendMessage("§cSE §7| §cYou do not provide a correct Materiel name or a valid amount of block. See a complete list of material here : ");
@@ -86,7 +89,7 @@ public class CreateSign implements Listener {
 				
 			}
 			
-			//If money reward
+			// For money reward
 			else if (event.getLine(1).equalsIgnoreCase("money")) {
 				
 				double amount;
@@ -95,25 +98,29 @@ public class CreateSign implements Listener {
 					amount = Integer.parseInt(event.getLine(2));
 				}catch(NumberFormatException e) {
 					player.sendMessage("§cSE §7| §cYou do not provide a correct number at the 3th line.");
-					return;
-				}
-				
-				if(amount != 0) {
-					
-					
-					EventSigns signevent = new EventSigns(sign, amount);
-					signs.add(signevent);
-					player.sendMessage("§aSE §7| §7Your sign as been §aadded§7 to the list !");
-
-					editSign(event);
-				
-				} 
-				else {
-					player.sendMessage("§cYou can't give 0 money to a player ! That's illegal !!!");
 					sign.setType(Material.AIR);
 					return;
 				}
 				
+				
+				if(amount != 0) {
+									
+					EventSign signevent = new EventSign(sign, amount);
+					signs.add(signevent);
+					player.sendMessage("§aSE §7| §7Your sign as been §aadded§7 to the list !");
+
+					if(config.getBoolean("options.replaceLines")) editSignLines(event, config, signevent, "money");
+				
+				} 
+				else {
+					player.sendMessage("§cSE §7| §cYou can't give 0 money to a player ! That's illegal !!!");
+					sign.setType(Material.AIR);
+					return;
+				}
+				
+			} else {
+				if(! main.getConfig().getBoolean("options.disabledWarning")) player.sendMessage("§cSE §7| §cIf you were trying to put SignEvent sign, type /se help to see how to created them !");
+				return;
 			}
 			
 		}
@@ -121,28 +128,30 @@ public class CreateSign implements Listener {
 	}
 
 
-	public void editSign(SignChangeEvent event) {
-		String one, two, three, four;
-		
-		one = main.getConfig().getString("options.firstLine").replace("&", "§");
-		two = main.getConfig().getString("options.secondLine").replace("&", "§");
-		three = main.getConfig().getString("options.thirdLine").replace("&", "§");
-		four =  main.getConfig().getString("options.fourthLine").replace("&", "§");
-		
-		if(one != "") event.setLine(0, one);
-		if(two != "") event.setLine(1, two);
-		if(three != "") event.setLine(2, three);
+	public void editSignLines(SignChangeEvent event, FileConfiguration config, EventSign sign, String type) {
+
+		event.setLine(0, config.getString("options.firstLine").replace("&", "§"));
+		event.setLine(1, config.getString("options.secondLine").replace("&", "§"));
+		event.setLine(2, config.getString("options.thirdLine").replace("&", "§"));
+		event.setLine(3, config.getString("options.fourthLine").replace("&", "§"));
 		
 		int line = main.getConfig().getInt("options.putRewardOnSign") -1;
-
-		if(line <= 4 && line > 0) {
-			event.setLine(line, event.getLine(3).toUpperCase());
-			System.out.println(line);
-			System.out.println(event.getLine(3).toUpperCase());
-		} 
-		else if(four != "") {
-			event.setLine(3, four);
-		}
 		
+		if(line <= 3 && line >= 0) {
+			
+			if(type.equals("block")) {
+				
+				event.setLine(line, sign.getReward().getItemMeta().getDisplayName());
+				
+			} else {
+				
+				String symbol = config.getString("options.symbol");
+				String moneyLine = config.getString("options.symbolOrder").replace("{amount}", sign.getPrice().toString()).replace("{symbol}", symbol);	
+				event.setLine(line, moneyLine);
+			}
+			
+		}
+			
 	}
+
 }
