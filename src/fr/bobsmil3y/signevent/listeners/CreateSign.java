@@ -21,7 +21,7 @@ import fr.bobsmil3y.signevent.EventSign;
 public class CreateSign implements Listener {
 
 	private Main main;
-	private ArrayList<EventSign> signs = new ArrayList<EventSign>();
+	private static ArrayList<EventSign> signs = new ArrayList<EventSign>();
 	
 	public CreateSign(Main main) {
 		this.main = main;
@@ -58,7 +58,7 @@ public class CreateSign implements Listener {
 					if(material != null && amount != 0 && amount > 0 && amount < 64) {
 						
 						ItemStack item = new ItemStack(material, amount);
-						EventSign signevent = new EventSign(sign, item, amount);
+						EventSign signevent = new EventSign(sign, item);
 						
 						if(config.getBoolean("options.replaceLines")) editSignLines(event, config, signevent, "block");
 						
@@ -157,4 +157,8 @@ public class CreateSign implements Listener {
 			
 	}
 
+	public static ArrayList<EventSign> getSigns() {
+		return signs;
+	}
+	
 }

@@ -6,35 +6,22 @@ import org.bukkit.inventory.ItemStack;
 
 public class EventSign {
 
-	private int total;
-	
 	private Block sign;
-	private int price;
-	
-	private ItemStack reward;
-	private int amount;
+	private int price; // For a money reward
+	private ItemStack reward; // For an item reward
 	
 	
-	public EventSign(Block sign, int amount2) {
+	public EventSign(Block sign, int price) {
 		this.sign = sign;
-		this.price = amount2;
-		this.total++;
+		this.price = price;
 	}
 	
 	
-	public EventSign(Block sign, ItemStack reward, int amount) {
+	public EventSign(Block sign, ItemStack reward) {
 		this.sign = sign;
 		this.reward = reward;
-		this.amount = amount;
-		this.total++;
 	}
 	
-
-
-	public int getAmount() {
-		return amount;
-	}
-
 	
 	public void setSign(Block sign) {
 		this.sign = sign;
