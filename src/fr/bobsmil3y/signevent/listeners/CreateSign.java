@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.bobsmil3y.signevent.Main;
 import fr.bobsmil3y.signevent.commands.SignEvent;
@@ -51,38 +52,32 @@ public class CreateSign implements Listener {
 				if(event.getLine(3) != "" && event.getLine(3) != null) {
 										
 					Material material = Material.getMaterial(event.getLine(3).toUpperCase());
-					int amount;
 					
-					try {
-						amount = Integer.parseInt(event.getLine(2));
-					}catch(NumberFormatException e) {
-						
-						player.sendMessage("§cSE §7| §cYou do not provide a correct number at the 3th line.");
-						sign.setType(Material.AIR);
-						return;
-						
-					}
+					int amount = isInteger(event, event.getLine(2));
 					
-					if(material != null && amount != 0 && amount >= 1) {
+					if(material != null && amount != 0 && amount > 0 && amount < 64) {
 						
 						ItemStack item = new ItemStack(material, amount);
-						
 						EventSign signevent = new EventSign(sign, item, amount);
+						
+						if(config.getBoolean("options.replaceLines")) editSignLines(event, config, signevent, "block");
+						
+						signevent.setSign(event.getBlock()); //Update to the changed one to match in future click event.
 						signs.add(signevent);
+						
 						player.sendMessage("§aSE §7| §7Your sign as been §aadded§7 to the list !");
 						
-						editSignLines(event, config, signevent, "block");
-						
 					} else {
-						player.sendMessage("§cSE §7| §cYou do not provide a correct Materiel name or a valid amount of block. See a complete list of material here : ");
-						player.sendMessage("§7https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html");
+						player.sendMessage("§cSE §7| §cYou do not provide a correct Materiel name or a valid amount of block.");
+						if(config.getBoolean("options.bukkitMaterialList")) player.sendMessage("§7See the list here : https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html");
+						
 						sign.setType(Material.AIR);
 						return;
 					}
 					
 				} else {
-					player.sendMessage("§cSE §7| §cYou do not provide a Materiel name. See a complete list of them here : ");
-					player.sendMessage("§7https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html");
+					player.sendMessage("§cSE §7| §cYou do not provide a Materiel name.");
+					if(config.getBoolean("options.bukkitMaterialList")) player.sendMessage("§7See the list here : https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html");
 					sign.setType(Material.AIR);
 					return;
 				}
@@ -92,24 +87,18 @@ public class CreateSign implements Listener {
 			// For money reward
 			else if (event.getLine(1).equalsIgnoreCase("money")) {
 				
-				double amount;
+				int amount = isInteger(event, event.getLine(2));
 				
-				try {
-					amount = Integer.parseInt(event.getLine(2));
-				}catch(NumberFormatException e) {
-					player.sendMessage("§cSE §7| §cYou do not provide a correct number at the 3th line.");
-					sign.setType(Material.AIR);
-					return;
-				}
-				
-				
-				if(amount != 0) {
+				if(amount != 0 && amount > 0) {
 									
 					EventSign signevent = new EventSign(sign, amount);
-					signs.add(signevent);
-					player.sendMessage("§aSE §7| §7Your sign as been §aadded§7 to the list !");
-
+					
 					if(config.getBoolean("options.replaceLines")) editSignLines(event, config, signevent, "money");
+					
+					signevent.setSign(event.getBlock()); //Update to the changed one to match in future click event.
+					signs.add(signevent);
+					
+					player.sendMessage("§aSE §7| §7Your sign as been §aadded§7 to the list !");
 				
 				} 
 				else {
@@ -128,6 +117,20 @@ public class CreateSign implements Listener {
 	}
 
 
+	public int isInteger(SignChangeEvent event, String line) {
+		
+		int amount = 0;
+		
+		try {
+			amount = Integer.parseInt(event.getLine(2));
+		}catch(NumberFormatException e) {
+			event.getPlayer().sendMessage("§cSE §7| §cYou do not provide a correct number at the 3th line.");
+			event.getBlock().setType(Material.AIR);
+		}
+		
+		return amount;
+	}
+	
 	public void editSignLines(SignChangeEvent event, FileConfiguration config, EventSign sign, String type) {
 
 		event.setLine(0, config.getString("options.firstLine").replace("&", "§"));
@@ -140,13 +143,13 @@ public class CreateSign implements Listener {
 		if(line <= 3 && line >= 0) {
 			
 			if(type.equals("block")) {
-				
-				event.setLine(line, sign.getReward().getItemMeta().getDisplayName());
+
+				event.setLine(line, sign.getReward().getType().toString());
 				
 			} else {
 				
 				String symbol = config.getString("options.symbol");
-				String moneyLine = config.getString("options.symbolOrder").replace("{amount}", sign.getPrice().toString()).replace("{symbol}", symbol);	
+				String moneyLine = config.getString("options.symbolOrder").replace("{amount}", String.valueOf(sign.getPrice())).replace("{symbol}", symbol);	
 				event.setLine(line, moneyLine);
 			}
 			

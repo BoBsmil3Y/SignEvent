@@ -24,10 +24,15 @@ options:
   # Default: "{amount} {symbol}"
   symbolOrder: "{amount} {symbol}"
 
-  # An option to disabled message when you creating sign with [event] on first line but not want to use this plugin.
-  # Can be great if you have an other plugin use this way to create special sign.
+  # An option to disabled warning message when you creating sign with [event] on first line, but you don't want to use this plugin.
+  # Can be great if you have an other plugin which use this way to create special sign.
   # Default: false
   disabledWarning: false
+  
+  # Send me link of Bukkit Material list on error message.
+  # You will recieved at each Material name error, a message with this list.
+  # Default: true
+  bukkitMaterialList: true
   
 messages:
   

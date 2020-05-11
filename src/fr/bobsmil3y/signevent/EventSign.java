@@ -9,15 +9,15 @@ public class EventSign {
 	private int total;
 	
 	private Block sign;
-	private Double price;
+	private int price;
 	
 	private ItemStack reward;
 	private int amount;
 	
 	
-	public EventSign(Block sign, Double price) {
+	public EventSign(Block sign, int amount2) {
 		this.sign = sign;
-		this.price = price;
+		this.price = amount2;
 		this.total++;
 	}
 	
@@ -36,12 +36,16 @@ public class EventSign {
 	}
 
 	
+	public void setSign(Block sign) {
+		this.sign = sign;
+	}
+	
 	public Block getSign() {
 		return sign;
 	}
 
 	
-	public Double getPrice() {
+	public int getPrice() {
 		return price;
 	}
 
