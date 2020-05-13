@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.bobsmil3y.signevent.Main;
-import fr.bobsmil3y.signevent.commands.SignEvent;
 import fr.bobsmil3y.signevent.EventSign;
 
 public class CreateSign implements Listener {
@@ -60,7 +58,9 @@ public class CreateSign implements Listener {
 						ItemStack item = new ItemStack(material, amount);
 						EventSign signevent = new EventSign(sign, item);
 						
-						if(config.getBoolean("options.replaceLines")) editSignLines(event, config, signevent, "block");
+						if(config.getBoolean("options.replaceLines")) editSignLines(event, config, signevent, "block");		
+						
+						if(config.getBoolean("options.renameItem")) item = renameItem(event, config, item);					
 						
 						signevent.setSign(event.getBlock()); //Update to the changed one to match in future click event.
 						signs.add(signevent);
@@ -117,6 +117,26 @@ public class CreateSign implements Listener {
 	}
 
 
+	private ItemStack renameItem(SignChangeEvent event, FileConfiguration config, ItemStack item) {
+		
+		ItemMeta meta = item.getItemMeta();
+		Player player = event.getPlayer();
+
+		String name = config.getString("opions.itemName");
+		
+		if(name != null) {
+			
+			meta.setDisplayName(name.replace("{block}", item.getType().toString().replace("_", " ")).replace("{player}", player.getDisplayName()));
+			
+		} else {
+			player.sendMessage("§cSE §7| §cUsing default value du to an empty name in configuration or an error.");
+		}
+		
+		item.setItemMeta(meta);
+		
+		return item;
+	}
+
 	public int isInteger(SignChangeEvent event, String line) {
 		
 		int amount = 0;
@@ -159,6 +179,10 @@ public class CreateSign implements Listener {
 
 	public static ArrayList<EventSign> getSigns() {
 		return signs;
+	}
+
+	public static void setSigns(ArrayList<EventSign> signs) {
+		CreateSign.signs = signs;
 	}
 	
 }

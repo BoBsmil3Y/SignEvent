@@ -4,6 +4,7 @@ main: fr.bobsmil3y.signevent.Main
 author: BoBsmil3Y
 description: Simple plugin to make hide sign event.
 api-version: 1.15
+depend: [Vault]
 
 commands:
   signevent:
@@ -18,6 +19,7 @@ commands:
   signevent reload:
     description: Refresh the config file.
     permission: signevent.admin.reload
+
 permissions:
   signevent.admin:
     description: Allows you to do /event command.

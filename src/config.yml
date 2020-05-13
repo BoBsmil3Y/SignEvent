@@ -3,7 +3,7 @@ options:
   # Default: true
   replaceLines: true
   
-  # The first line of the sign will be remplaced by this one. 
+  # Lines of the sign will be remplaced by those one. 
   firstLine: "&7! &cEvent &7!"
   secondLine: "&fYou find me !"
   thirdLine: "&fGood job !"
@@ -15,7 +15,7 @@ options:
   # Default: 4
   putRewardOnSign: 4
   
-  # Change the symbol in messages (only affect chat message, not your economy plugin).
+  # Change the symbol in messages (only affect the plugin messages, not your economy plugin).
   # Default: "€"
   symbol: "€"
   
@@ -23,6 +23,15 @@ options:
   # {amount} {symbol} will display 1000 €.
   # Default: "{amount} {symbol}"
   symbolOrder: "{amount} {symbol}"
+  
+  # Should the given item has to be rename ?
+  # Default: true
+  renameItem: true
+  
+  # If you set to true the option above, you have to use this option.
+  # You can put {player} to put the player name and {block} to put the block name.
+  # Default: "{block} of {player}"
+  itemName: "{block} of {player}"
 
   # An option to disabled warning message when you creating sign with [event] on first line, but you don't want to use this plugin.
   # Can be great if you have an other plugin which use this way to create special sign.
@@ -33,6 +42,3 @@ options:
   # You will recieved at each Material name error, a message with this list.
   # Default: true
   bukkitMaterialList: true
-  
-messages:
-  

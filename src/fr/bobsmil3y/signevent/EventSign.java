@@ -16,7 +16,6 @@ public class EventSign {
 		this.price = price;
 	}
 	
-	
 	public EventSign(Block sign, ItemStack reward) {
 		this.sign = sign;
 		this.reward = reward;
@@ -31,12 +30,10 @@ public class EventSign {
 		return sign;
 	}
 
-	
 	public int getPrice() {
 		return price;
 	}
-
-
+	
 	public ItemStack getReward() {
 		return reward;
 	}

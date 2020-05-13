@@ -1,6 +1,5 @@
 package fr.bobsmil3y.signevent.listeners;
 
-
 import java.util.ArrayList;
 
 import org.bukkit.Material;
@@ -11,13 +10,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import fr.bobsmil3y.signevent.EventSign;
 import fr.bobsmil3y.signevent.Main;
+import net.milkbowl.vault.economy.Economy;
 
 public class ClickOnSign implements Listener {
 
-	Main main;
+	@SuppressWarnings("unused")
+	private Main main;
 	
 	public ClickOnSign(Main main) {
 		this.main = main;
@@ -37,28 +39,31 @@ public class ClickOnSign implements Listener {
 			if(blockstate instanceof Sign) {
 				
 				ArrayList<EventSign> signs = CreateSign.getSigns();
+				EventSign signToRemove = null;
 				
 				for(EventSign sign : signs) {
 					if(event.getClickedBlock().equals(sign.getSign())) {
+
 						if(sign.getReward() != null) {
 							
-							/*
-							 * Give the item
-							 * Delete the sign in array list
-							 * Delete the sign in game
-							 * Rename the item by the name of the player (with an option to disabled)
-							 * */
+							ItemStack reward = sign.getReward();
+							
+							player.getInventory().addItem(reward);
+							
+							signToRemove = sign;		
+							
 							sign.getSign().setType(Material.AIR);
-							player.sendMessage("Bravo tu as trouvé un panneau ! Tu gagnes " + sign.getReward().getAmount() + "x " + sign.getReward());
+							player.sendMessage("Bravo tu as trouvé un panneau ! Tu gagnes " + sign.getReward().getAmount() + "x " + sign.getReward().getType());
 							
 						} else {
 							
-							/*
-							 * Give the money
-							 * Delete the sign in array list
-							 * Delete the sign in game
-							 * */
+							Economy eco = Main.getEconomy();
+							
+							eco.depositPlayer(player, sign.getPrice());
+							
 							sign.getSign().setType(Material.AIR);
+							signToRemove = sign;
+							
 							player.sendMessage("Bravo tu as trouvé un panneau ! Tu gagnes " + sign.getPrice() + "€.");
 							
 						}
@@ -66,6 +71,7 @@ public class ClickOnSign implements Listener {
 					}
 				}
 				
+				if(signToRemove != null) signs.remove(signToRemove);
 				
 			}
 			
